@@ -1,0 +1,10 @@
+services:
+  postgres:
+    container_name: chnawa
+    image: postgres:13
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_USER: chnawa
+      POSTGRES_PASSWORD: chnawa
+      POSTGRES_DB: chnawa
