@@ -1,10 +1,15 @@
 services:
-  postgres:
-    container_name: chnawa
-    image: postgres:13
+  mongodb:
+    image: mongo:latest
+    restart: always
+    container_name: chnawa-mongo
     ports:
-      - "5432:5432"
+      - "27017:27017"
+    volumes:
+      - mongodb_data:/data/db
     environment:
-      POSTGRES_USER: chnawa
-      POSTGRES_PASSWORD: chnawa
-      POSTGRES_DB: chnawa
+      - MONGO_INITDB_ROOT_USERNAME=chnawa
+      - MONGO_INITDB_ROOT_PASSWORD=chnawa
+
+volumes:
+  mongodb_data:
