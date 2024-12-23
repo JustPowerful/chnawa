@@ -21,6 +21,8 @@ export const createSubjectAction = actionClient
       parsedInput: { title, description, teacherName, teacherEmail },
     }) => {
       try {
+        await connectDB();
+
         const session = await auth();
         if (!title) {
           return {
@@ -28,7 +30,7 @@ export const createSubjectAction = actionClient
             message: "Please provide all the required fields!",
           };
         }
-        await connectDB();
+
         const subject = new Subject({
           title,
           userId: session?.user.id,
