@@ -2,7 +2,6 @@ import { NextAuthConfig } from "next-auth";
 import connectDB from "@/lib/connectDB";
 import User from "@/models/User";
 import Credentials from "next-auth/providers/credentials";
-// import * as argon from "argon2";
 import bcrypt from "bcryptjs";
 
 declare module "next-auth" {
