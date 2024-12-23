@@ -5,6 +5,7 @@ import { signIn } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { InputWithLabel } from "@/components/ui/input-with-label";
+import { Loader2 } from "lucide-react";
 
 interface SignInFormProps {}
 
@@ -13,10 +14,12 @@ const SignInForm: FC<SignInFormProps> = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
+      setIsLoading(true);
       const res = await signIn("credentials", {
         email,
         password,
@@ -31,12 +34,16 @@ const SignInForm: FC<SignInFormProps> = () => {
       router.push("/dashboard"); // Redirect to dashboard after successful sign in
     } catch (error) {
       setError("Something went wrong");
+    } finally {
+      setIsLoading(false);
     }
   };
 
   return (
     <form onSubmit={handleSubmit}>
-      <div className="text-2xl font-semibold">Sign into your account. </div>
+      <div className="text-2xl font-semibold">
+        Sign into your <span className="opacity-50">chnawa!</span>{" "}
+      </div>
       <div>Start doing more with chnawa!</div>
       <div className="space-y-4 mt-4">
         <InputWithLabel
@@ -56,35 +63,14 @@ const SignInForm: FC<SignInFormProps> = () => {
           type="password"
         />
         {error && <p className="text-red-500 text-sm">{error}</p>}
-        <Button className="w-full">Continue</Button>
+        <Button className="w-full">
+          {isLoading ? (
+            <Loader2 className="w-5 h-5 animate-spin" />
+          ) : (
+            "Continue"
+          )}
+        </Button>
       </div>
-
-      {/* <div>
-        <label htmlFor="email" className="block text-sm font-medium">
-          Email
-        </label>
-        <input
-          type="email"
-          id="email"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-          className="mt-1 block w-full rounded-md border p-2"
-          required
-        />
-      </div>
-      <div>
-        <label htmlFor="password" className="block text-sm font-medium">
-          Password
-        </label>
-        <input
-          type="password"
-          id="password"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-          className="mt-1 block w-full rounded-md border p-2"
-          required
-        />
-      </div> */}
     </form>
   );
 };
