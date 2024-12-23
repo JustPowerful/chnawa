@@ -2,9 +2,9 @@ import mongoose from "mongoose";
 
 const MONGODB_URI = process.env.DATABASE_URL!;
 
-if (!MONGODB_URI) {
-  throw new Error("Please define the MONGODB_URI environment variable");
-}
+// if (MONGODB_URI.length === 0) {
+//   throw new Error("Please define the MONGODB_URI environment variable");
+// }
 
 let isConnected = false;
 
