@@ -81,12 +81,7 @@ const SubjectPreview: FC<SubjectPreviewProps> = ({
   }
 
   return (
-    <div
-      className="relative bg-zinc-200 p-3 rounded-xl cursor-pointer"
-      onClick={() => {
-        router.push(`/subject/${id}`);
-      }}
-    >
+    <div>
       {/* Delete dialog */}
       <Dialog open={toggleDelete} onOpenChange={setToggleDelete}>
         <DialogContent>
@@ -172,52 +167,63 @@ const SubjectPreview: FC<SubjectPreviewProps> = ({
           </form>
         </DialogContent>
       </Dialog>
-      <DropdownMenu>
-        <DropdownMenuTrigger className="absolute top-0 right-0 p-2">
-          <EllipsisVertical className="w-5 h-5" />
-        </DropdownMenuTrigger>
-        <DropdownMenuContent>
-          <DropdownMenuItem
-            onClick={() => {
-              setToggleDelete(true);
-            }}
-          >
-            Delete
-          </DropdownMenuItem>
-          <DropdownMenuItem
-            onClick={() => {
-              setToggleEdit(true);
-            }}
-          >
-            Edit
-          </DropdownMenuItem>
-        </DropdownMenuContent>
-      </DropdownMenu>
-
-      <div>
-        <BookCopy className="w-5 h-5" />
-        <span className="text-zinc-600">Subject</span> |{" "}
-        <span className="font-semibold">{title}</span>
-      </div>
-      {description && (
+      <div
+        className="relative bg-zinc-200 p-3 rounded-xl cursor-pointer h-full"
+        onClick={(event) => {
+          event.stopPropagation();
+          router.push(`/subject/${id}`);
+        }}
+      >
+        <DropdownMenu>
+          <DropdownMenuTrigger className="absolute top-0 right-0 p-2">
+            <EllipsisVertical className="w-5 h-5" />
+          </DropdownMenuTrigger>
+          <DropdownMenuContent>
+            <DropdownMenuItem
+              onClick={(event) => {
+                event.preventDefault();
+                event.stopPropagation();
+                setToggleDelete(true);
+              }}
+            >
+              Delete
+            </DropdownMenuItem>
+            <DropdownMenuItem
+              onClick={(event) => {
+                event.preventDefault();
+                event.stopPropagation();
+                setToggleEdit(true);
+              }}
+            >
+              Edit
+            </DropdownMenuItem>
+          </DropdownMenuContent>
+        </DropdownMenu>
         <div>
-          <span className="font-normal text-zinc-500 text-sm">
-            {reduceStr(description, 100)}
-          </span>
+          <BookCopy className="w-5 h-5" />
+          <span className="text-zinc-600">Subject</span> |{" "}
+          <span className="font-semibold">{title}</span>
         </div>
-      )}
-      {teacherName && (
-        <div className="text-xs">
-          <span className="text-zinc-600">Teacher</span> |{" "}
-          <span className="font-semibold">{teacherName}</span>
-        </div>
-      )}
-      {teacherEmail && (
-        <div className="text-xs">
-          <span className="text-zinc-600">Email</span> |{" "}
-          <span className="font-semibold">{teacherEmail}</span>
-        </div>
-      )}
+        {description && (
+          <div>
+            <span className="font-normal text-zinc-500 text-sm">
+              {reduceStr(description, 100)}
+            </span>
+          </div>
+        )}
+        {teacherName && (
+          <div className="text-xs">
+            <span className="text-zinc-600">Teacher</span> |{" "}
+            <span className="font-semibold">{teacherName}</span>
+          </div>
+        )}
+        {teacherEmail && (
+          <div className="text-xs">
+            <span className="text-zinc-600">Email</span> |{" "}
+            <span className="font-semibold">{teacherEmail}</span>
+          </div>
+        )}
+      </div>
     </div>
   );
 };
