@@ -11,6 +11,7 @@ export function InputWithLabel({
   onChange,
   value,
   placeholder,
+  defaultValue,
   type = "text",
   error,
 }: {
@@ -21,13 +22,15 @@ export function InputWithLabel({
   value?: string;
   label: string;
   placeholder: string;
+  defaultValue?: string;
   type?: React.InputHTMLAttributes<HTMLInputElement>["type"];
   error?: string;
 }) {
   return (
-    <div className={cn(className, "grid w-full max-w-sm items-center gap-1.5")}>
+    <div className={cn(className, "grid w-full  items-center gap-1.5 ")}>
       <Label>{label}</Label>
       <Input
+        defaultValue={defaultValue}
         id={id}
         name={name}
         type={type}
