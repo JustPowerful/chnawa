@@ -14,6 +14,7 @@ export function InputWithLabel({
   defaultValue,
   type = "text",
   error,
+  ref,
 }: {
   id?: string;
   name?: string;
@@ -25,11 +26,13 @@ export function InputWithLabel({
   defaultValue?: string;
   type?: React.InputHTMLAttributes<HTMLInputElement>["type"];
   error?: string;
+  ref?: React.RefObject<HTMLInputElement>;
 }) {
   return (
     <div className={cn(className, "grid w-full  items-center gap-1.5 ")}>
       <Label>{label}</Label>
       <Input
+        ref={ref}
         defaultValue={defaultValue}
         id={id}
         name={name}
