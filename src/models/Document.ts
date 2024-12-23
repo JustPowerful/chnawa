@@ -1,9 +1,15 @@
-import { Schema, Model, Document as DocumentInterface, model } from "mongoose";
+import mongoose, {
+  Schema,
+  Model,
+  Document as DocumentInterface,
+  model,
+} from "mongoose";
 
 interface IDocument extends DocumentInterface {
   title: string;
   fullname: string;
   subjectId: Schema.Types.ObjectId;
+  userId: Schema.Types.ObjectId;
   sessionNumber: number;
   classref: string;
   objectives: string[]; // Array of strings due to the fact the objectives can be multiple
@@ -21,6 +27,11 @@ const DocumentSchema = new Schema<IDocument>({
   subjectId: {
     type: Schema.Types.ObjectId,
     ref: "Subject",
+    required: true,
+  },
+  userId: {
+    type: Schema.Types.ObjectId,
+    ref: "User",
     required: true,
   },
   sessionNumber: {
