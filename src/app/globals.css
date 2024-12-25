@@ -70,3 +70,29 @@ body {
     @apply bg-background text-foreground;
   }
 }
+
+/* Custom caret styling */
+@property --caret-opacity {
+  syntax: "<number>";
+  initial-value: 1;
+  inherits: false;
+}
+
+.caret-effect {
+  --caret-opacity: 1;
+  caret-color: hsl(var(--foreground) / var(--caret-opacity));
+  animation: caretFade 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+@keyframes caretFade {
+  0%,
+  10%,
+  90%,
+  100% {
+    --caret-opacity: 1;
+  }
+  40%,
+  60% {
+    --caret-opacity: 0.3;
+  }
+}
