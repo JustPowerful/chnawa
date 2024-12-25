@@ -1,7 +1,7 @@
 "use client";
 import { Button, buttonVariants } from "@/components/ui/button";
 import { File, Files, Plus } from "lucide-react";
-import { FC, useRef, useState } from "react";
+import { FC, useEffect, useRef, useState } from "react";
 
 import {
   Dialog,
@@ -17,6 +17,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { createDocumentAction } from "@/app/actions/document/create-document-actions";
 import toast from "react-hot-toast";
+import { useDocumentStore } from "@/stores/document.store";
 
 interface SidebarProps {
   id: string;
@@ -41,6 +42,14 @@ const Sidebar: FC<SidebarProps> = ({
     _id: string;
     title: string;
   }[] = JSON.parse(documents);
+
+  const updateDocumentId = useDocumentStore((state) => state.updateDocumentId);
+  const resetDocumentId = useDocumentStore((state) => state.resetDocumetId);
+
+  useEffect(() => {
+    resetDocumentId();
+  }, []);
+
   async function createDocument(formData: FormData) {
     try {
       const response = await createDocumentAction({
@@ -176,6 +185,9 @@ const Sidebar: FC<SidebarProps> = ({
         <div className="flex flex-col gap-2">
           {parsedDocs.map((doc) => (
             <button
+              onClick={() => {
+                updateDocumentId(doc._id);
+              }}
               key={doc._id}
               className=" bg-slate-100 p-1.5 rounded-md w-full flex gap-1 items-center text-xs hover:bg-slate-300"
             >
