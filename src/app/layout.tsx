@@ -3,6 +3,7 @@ import { Inter } from "next/font/google";
 import "./globals.css";
 import { Toaster } from "react-hot-toast";
 import { SessionProvider } from "next-auth/react";
+import QueryProvider from "@/providers/QueryProvider";
 
 const inter = Inter({
   variable: "--font-inter",
@@ -22,10 +23,12 @@ export default function RootLayout({
   return (
     <html lang="en">
       <SessionProvider>
-        <body className={`${inter.className} antialiased`}>
-          {children}
-          <Toaster position="top-center" />
-        </body>
+        <QueryProvider>
+          <body className={`${inter.className} antialiased`}>
+            {children}
+            <Toaster position="top-center" />
+          </body>
+        </QueryProvider>
       </SessionProvider>
     </html>
   );
