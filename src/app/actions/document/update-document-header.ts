@@ -12,6 +12,7 @@ const schema = z.object({
   fullname: z.string(),
   classref: z.string(),
   sessionNumber: z.number(),
+  objectives: z.array(z.string()).optional(),
 });
 
 export const updateDocumentHeaderAction = actionClient
@@ -31,6 +32,7 @@ export const updateDocumentHeaderAction = actionClient
         fullname: parsedInput.fullname,
         classref: parsedInput.classref,
         sessionNumber: parsedInput.sessionNumber,
+        objectives: parsedInput.objectives,
       });
       // check if title is changed
       if (document.title !== parsedInput.title) {
