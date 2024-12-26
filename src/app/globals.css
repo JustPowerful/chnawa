@@ -69,6 +69,11 @@ body {
   body {
     @apply bg-background text-foreground;
   }
+
+  ul,
+  ol {
+    list-style: revert;
+  }
 }
 
 /* Custom caret styling */
