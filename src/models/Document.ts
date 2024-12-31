@@ -13,6 +13,7 @@ interface IDocument extends DocumentInterface {
   sessionNumber: number;
   classref: string;
   objectives: string[]; // Array of strings due to the fact the objectives can be multiple
+  content: Schema.Types.Mixed; // Mixed type to store any type of data
 }
 
 const DocumentSchema = new Schema<IDocument>({
@@ -46,7 +47,14 @@ const DocumentSchema = new Schema<IDocument>({
     type: [String],
     required: true,
   },
+  content: {
+    type: Schema.Types.Mixed,
+    required: false,
+  },
 });
+
+// // sync indexes content
+// await mongoose.syncIndexes();
 
 let Document: Model<IDocument>;
 try {
