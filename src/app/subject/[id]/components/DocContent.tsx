@@ -1,12 +1,13 @@
 "use client";
 import { useDocumentStore } from "@/stores/document.store";
 import { useQuery } from "@tanstack/react-query";
-import { FC, useEffect } from "react";
+import { FC } from "react";
 import DocHeader from "./document-content/DocHeader";
-import { Noto_Serif, Inter } from "next/font/google";
+import { Noto_Serif } from "next/font/google";
 // import { Loader2, Save } from "lucide-react";
 import { cn } from "@/lib/utils";
 import DocNav from "./document-content/DocNav";
+import dynamic from "next/dynamic";
 
 const notoSerif = Noto_Serif({
   subsets: ["latin"],
@@ -41,23 +42,31 @@ const DocContent: FC<DocContentProps> = ({}) => {
     enabled: !!documentId,
   });
 
-  return (
-    <div className={cn(notoSerif.className, "relative")}>
-      {/* {isSaving && (
-        <div
-          className={cn(
-            "fixed top-2 left-2 bg-white bg-opacity-40 backdrop-blur-lg p-2 rounded-md border flex items-center justify-center h-10 gap-1 text-zinc-600",
-            inter.className
-          )}
-        >
-          <Loader2 className="w-5 h-5 animate-spin" /> Saving the document
-        </div>
-      )} */}
+  const DocEditor = dynamic(() => import("./document-content/DocEditor"), {
+    ssr: false,
+  });
 
+  return (
+    <div className={cn(notoSerif.className, "relative h-screen")}>
       {data && (
         <>
           <DocNav refetch={refetch} document={data} />
-          <DocHeader refetch={refetch} document={data} />
+          <div className="relative px-4 md:px-8 h-[calc(100vh-64px)] overflow-y-auto">
+            <div
+              id="documentContent"
+              className="px-8 py-8 space-y-6 bg-white rounded-lg shadow-sm"
+              style={{
+                maxWidth: "800px",
+                margin: "2rem auto",
+                minHeight: "calc(100vh - 128px)",
+                pageBreakInside: "avoid",
+                wordBreak: "break-word",
+              }}
+            >
+              <DocHeader refetch={refetch} document={data} />
+              <DocEditor document={data} />
+            </div>
+          </div>
         </>
       )}
     </div>

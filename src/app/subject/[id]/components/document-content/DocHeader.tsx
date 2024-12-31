@@ -89,7 +89,7 @@ const DocHeader: FC<DocHeaderProps> = ({ document, refetch }) => {
   };
 
   return (
-    <div className="p-6 space-y-4">
+    <div className="space-y-4">
       <div className="text-4xl outline-none">
         <EditableText
           value={headerContent.title}
