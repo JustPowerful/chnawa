@@ -1,8 +1,12 @@
 "use client";
-import { FC, useEffect } from "react";
+import { FC } from "react";
 import { Inter } from "next/font/google";
 import { cn, reduceStr } from "@/lib/utils";
 import { File, Loader2 } from "lucide-react";
+import toast from "react-hot-toast";
+import { exportToPdf } from "@/lib/pdf-utils";
+import { useState } from "react";
+
 const inter = Inter({
   subsets: ["latin"],
   weight: ["400", "500", "600", "700"],
@@ -14,8 +18,6 @@ import {
   MenubarContent,
   MenubarItem,
   MenubarMenu,
-  MenubarRadioGroup,
-  MenubarRadioItem,
   MenubarSeparator,
   MenubarShortcut,
   MenubarSub,
@@ -25,14 +27,42 @@ import {
 } from "@/components/ui/menubar";
 import { useDocumentStore } from "@/stores/document.store";
 
-function MenuBar() {
+function MenuBar({
+  docum,
+}: {
+  docum: {
+    _id: string;
+    title: string;
+  };
+}) {
+  const [isExporting, setIsExporting] = useState(false);
+
+  async function saveToPDF() {
+    try {
+      setIsExporting(true);
+      const success = await exportToPdf(
+        "documentContent",
+        docum.title.replace(/[^a-z0-9]/gi, "_").toLowerCase()
+      );
+      if (success) {
+        toast.success("PDF exported successfully");
+      } else {
+        toast.error("Failed to export PDF");
+      }
+    } catch (error) {
+      toast.error("Failed to export PDF");
+    } finally {
+      setIsExporting(false);
+    }
+  }
+
   return (
     <Menubar>
       <MenubarMenu>
         <MenubarTrigger>File</MenubarTrigger>
         <MenubarContent>
           <MenubarItem>
-            New Document <MenubarShortcut>⌘T</MenubarShortcut>
+            New Document <MenubarShortcut>CMD+T</MenubarShortcut>
           </MenubarItem>
 
           <MenubarItem disabled>Delete Document</MenubarItem>
@@ -40,14 +70,29 @@ function MenuBar() {
           <MenubarSub>
             <MenubarSubTrigger>Share</MenubarSubTrigger>
             <MenubarSubContent>
-              <MenubarItem>Email link</MenubarItem>
-              <MenubarItem>Email PDF</MenubarItem>
-              <MenubarItem>Share link</MenubarItem>
+              <MenubarItem disabled>Email link</MenubarItem>
+              <MenubarItem disabled>Email PDF</MenubarItem>
+              <MenubarItem disabled>Share link</MenubarItem>
+            </MenubarSubContent>
+          </MenubarSub>
+          <MenubarSub>
+            <MenubarSubTrigger>Export</MenubarSubTrigger>
+            <MenubarSubContent>
+              <MenubarItem disabled={isExporting} onClick={saveToPDF}>
+                {isExporting
+                  ? "Exporting PDF..."
+                  : "Export as PDF (experimental)"}
+              </MenubarItem>
+              <MenubarItem disabled>.chnawa (soon)</MenubarItem>
             </MenubarSubContent>
           </MenubarSub>
           <MenubarSeparator />
-          <MenubarItem>
-            Print... <MenubarShortcut>⌘P</MenubarShortcut>
+          <MenubarItem
+            onClick={() => {
+              window.location.href = "/dashboard";
+            }}
+          >
+            Exit <MenubarShortcut>CMD+Q</MenubarShortcut>
           </MenubarItem>
         </MenubarContent>
       </MenubarMenu>
@@ -115,15 +160,16 @@ interface DocNavProps {
   };
   refetch: () => void;
 }
-const DocNav: FC<DocNavProps> = ({ document, refetch }) => {
+const DocNav: FC<DocNavProps> = ({ document: docum, refetch }) => {
   const isSaving = useDocumentStore((state) => state.saving);
-  useEffect(() => {
-    return () => refetch();
-  }, [isSaving]);
+
+  // useEffect(() => {
+  //   return () => refetch();
+  // }, [isSaving]);
   return (
     <div className={cn("sticky top-0 left-0  w-full p-2", inter.className)}>
       <div className="flex gap-3 justify-between items-center pt-3 px-2">
-        <MenuBar />
+        <MenuBar docum={docum} />
         <div className="flex items-center gap-2">
           {isSaving && (
             <div className="flex items-center gap-1 text-zinc-700">
@@ -133,7 +179,7 @@ const DocNav: FC<DocNavProps> = ({ document, refetch }) => {
           <div className="border-l-2 border-zinc-300 pl-2 font-semibold flex items-center gap-1">
             {" "}
             <File size={16} />
-            {reduceStr(document.title, 18)}
+            {reduceStr(docum.title, 18)}
           </div>
         </div>
       </div>
