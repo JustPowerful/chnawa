@@ -20,6 +20,9 @@ export function useDebouncedUpdate<T, U>(
       try {
         setSaving(true);
         const result = await updateFn(data);
+        if ((result as any)?.success === false) {
+          throw new Error((result as any)?.message || "Update failed");
+        }
         onSuccess?.();
       } catch (error) {
         onError?.(error);
