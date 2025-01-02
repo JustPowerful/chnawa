@@ -1,3 +1,7 @@
+<div align="center">
+<img src="https://github.com/user-attachments/assets/377798d8-fe89-4fb4-aa98-b87092873ee9" width="200" />
+</div>
+
 # Chnawa 😯
 Pronunciation: `/ʃnæ.wæ/`
 
