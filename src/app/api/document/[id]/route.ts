@@ -3,7 +3,11 @@ import { auth } from "@/lib/auth";
 import Document from "@/models/Document";
 import connectDB from "@/lib/connectDB";
 
-export async function GET(request: NextRequest, params: { id: string }) {
+export async function GET(
+  request: NextRequest,
+  { params }: { params: { id: string } }
+) {
+  console.log(await params);
   try {
     const { id } = await params;
     const session = await auth();
