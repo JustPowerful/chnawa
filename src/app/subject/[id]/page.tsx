@@ -11,7 +11,7 @@ import DocContent from "./components/DocContent";
 import Document from "@/models/Document";
 
 interface pageProps {
-  params: { id: string };
+  params: Promise<{ id: string }>;
 }
 
 const page: FC<pageProps> = async ({ params }) => {
