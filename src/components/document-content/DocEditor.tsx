@@ -23,22 +23,27 @@ const DEFAULT_INITIAL_DATA: OutputData = {
 
 function Editor({
   document,
+  readOnly = false,
 }: {
-  document: {
-    _id: string;
-    title: string;
-    content: string;
-    subjectId: string;
-    createdAt: string;
-    updatedAt: string;
-  };
+  document:
+    | {
+        _id: string;
+        title: string;
+        content: string;
+        subjectId: string;
+        createdAt: string;
+        updatedAt: string;
+      }
+    | string;
+  readOnly?: boolean;
 }) {
+  const doc = typeof document === "string" ? JSON.parse(document) : document;
   const ref = useRef<EditorJS>(null);
   const [data, setData] = useState<OutputData>(() => {
     try {
-      if (!document.content) return DEFAULT_INITIAL_DATA;
+      if (!doc.content) return DEFAULT_INITIAL_DATA;
 
-      const parsedContent = JSON.parse(document.content);
+      const parsedContent = JSON.parse(doc.content);
       // Ensure there's at least one block
       if (!parsedContent.blocks || parsedContent.blocks.length === 0) {
         return DEFAULT_INITIAL_DATA;
@@ -56,7 +61,7 @@ function Editor({
         content = DEFAULT_INITIAL_DATA;
       }
       return await updateDocumentContentAction({
-        id: document._id,
+        id: doc._id,
         content: JSON.stringify(content),
       });
     },
@@ -69,6 +74,7 @@ function Editor({
     if (!ref.current) {
       const editor = new EditorJS({
         holder: "editorjs",
+        readOnly,
         placeholder: "Write something, or press / to use commands",
         tools: {
           list: List,

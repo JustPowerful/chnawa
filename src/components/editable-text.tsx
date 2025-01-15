@@ -3,9 +3,14 @@ import { FC, useEffect, useRef } from "react";
 interface EditableTextProps {
   value: string | number;
   onContentChange?: (value: string) => void;
+  readOnly?: boolean;
 }
 
-const EditableText: FC<EditableTextProps> = ({ value, onContentChange }) => {
+const EditableText: FC<EditableTextProps> = ({
+  value,
+  onContentChange,
+  readOnly = false,
+}) => {
   const spanRef = useRef<HTMLSpanElement>(null);
 
   useEffect(() => {
@@ -17,7 +22,7 @@ const EditableText: FC<EditableTextProps> = ({ value, onContentChange }) => {
   return (
     <span
       ref={spanRef}
-      contentEditable
+      contentEditable={!readOnly}
       suppressContentEditableWarning
       onInput={(e) => {
         onContentChange && onContentChange(e.currentTarget.textContent || "");

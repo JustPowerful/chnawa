@@ -23,7 +23,10 @@ export async function GET(
     }
     await connectDB();
 
-    const document = await Document.findById(id).populate("subjectId");
+    const document = await Document.findById(id)
+      .populate("subjectId")
+      .populate("userId");
+
     if (!document) {
       return NextResponse.json(
         {
@@ -35,24 +38,25 @@ export async function GET(
         }
       );
     }
-    if (document.userId.toString() !== session.user.id) {
+
+    if ((document.userId as any)._id.toString() !== session.user.id) {
       return NextResponse.json(
         {
           success: false,
-          message: "Unauthorized",
+          message: "Unauthorized For user request",
         },
         {
           status: 401,
         }
       );
     }
+
     return NextResponse.json({
       success: true,
       document,
       message: "Document fetched successfully",
     });
   } catch (error) {
-    throw error;
     return NextResponse.json(
       {
         success: false,

@@ -4,7 +4,7 @@ import { Inter } from "next/font/google";
 import { cn, reduceStr } from "@/lib/utils";
 import { File, Loader2 } from "lucide-react";
 import toast from "react-hot-toast";
-import { exportToPdf } from "@/lib/pdf-utils";
+// import { exportToPdf } from "@/lib/pdf-utils";
 import { useState } from "react";
 
 const inter = Inter({
@@ -26,6 +26,7 @@ import {
   MenubarTrigger,
 } from "@/components/ui/menubar";
 import { useDocumentStore } from "@/stores/document.store";
+import { useRouter } from "next/navigation";
 
 function MenuBar({
   docum,
@@ -36,19 +37,11 @@ function MenuBar({
   };
 }) {
   const [isExporting, setIsExporting] = useState(false);
-
+  const router = useRouter();
   async function saveToPDF() {
     try {
       setIsExporting(true);
-      const success = await exportToPdf(
-        "documentContent",
-        docum.title.replace(/[^a-z0-9]/gi, "_").toLowerCase()
-      );
-      if (success) {
-        toast.success("PDF exported successfully");
-      } else {
-        toast.error("Failed to export PDF");
-      }
+      router.push(`/document/preview/${docum._id}`);
     } catch (error) {
       toast.error("Failed to export PDF");
     } finally {

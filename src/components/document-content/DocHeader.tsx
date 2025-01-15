@@ -15,28 +15,39 @@ import {
 import { Input } from "@/components/ui/input";
 
 interface DocHeaderProps {
-  document: {
-    _id: string;
-    title: string;
-    fullname: string;
-    subjectId: {
-      title: string;
-    };
-    sessionNumber: number;
-    classref: string;
-    objectives: string[];
-  };
-  refetch: () => void;
+  document:
+    | {
+        _id: string;
+        title: string;
+        fullname: string;
+        subjectId: {
+          title: string;
+        };
+        sessionNumber: number;
+        classref: string;
+        objectives: string[];
+      }
+    | string;
+  refetch?: () => void;
+  readOnly?: boolean;
 }
 
-const DocHeader: FC<DocHeaderProps> = ({ document, refetch }) => {
+const DocHeader: FC<DocHeaderProps> = ({
+  document,
+  refetch,
+  readOnly = false,
+}) => {
+  let doc = typeof document === "object" ? document : JSON.parse(document);
+  if (typeof document === "string") {
+    doc = JSON.parse(document);
+  }
   const [headerContent, setHeaderContent] = useState({
-    title: document.title,
-    fullname: document.fullname,
-    subject: document.subjectId.title,
-    class: document.classref,
-    sessionNumber: document.sessionNumber,
-    objectives: document.objectives,
+    title: doc.title,
+    fullname: doc.fullname,
+    subject: doc.subjectId.title,
+    class: doc.classref,
+    sessionNumber: doc.sessionNumber,
+    objectives: doc.objectives,
   });
   const [newObjective, setNewObjective] = useState("");
   const [isDialogOpen, setIsDialogOpen] = useState(false);
@@ -44,7 +55,7 @@ const DocHeader: FC<DocHeaderProps> = ({ document, refetch }) => {
   const { isPending, debouncedUpdate } = useDebouncedUpdate(
     (data: typeof headerContent) => {
       const d = updateDocumentHeaderAction({
-        id: document._id,
+        id: doc._id,
         title: data.title,
         fullname: data.fullname,
         classref: data.class,
@@ -63,17 +74,20 @@ const DocHeader: FC<DocHeaderProps> = ({ document, refetch }) => {
   );
 
   useEffect(() => {
+    if (readOnly) {
+      return;
+    }
     debouncedUpdate(headerContent);
   }, [headerContent, debouncedUpdate]);
 
   useEffect(() => {
     setHeaderContent({
-      title: document.title,
-      fullname: document.fullname,
-      subject: document.subjectId.title,
-      class: document.classref,
-      sessionNumber: document.sessionNumber,
-      objectives: document.objectives,
+      title: doc.title,
+      fullname: doc.fullname,
+      subject: doc.subjectId.title,
+      class: doc.classref,
+      sessionNumber: doc.sessionNumber,
+      objectives: doc.objectives,
     });
   }, [document]);
 
@@ -92,6 +106,7 @@ const DocHeader: FC<DocHeaderProps> = ({ document, refetch }) => {
     <div className="space-y-4">
       <div className="text-4xl outline-none">
         <EditableText
+          readOnly={readOnly}
           value={headerContent.title}
           onContentChange={(value) => {
             setHeaderContent((prev) => ({ ...prev, title: value }));
@@ -103,6 +118,7 @@ const DocHeader: FC<DocHeaderProps> = ({ document, refetch }) => {
           <span className="font-semibold">Student name: </span>
 
           <EditableText
+            readOnly={readOnly}
             value={headerContent.fullname}
             onContentChange={(value) => {
               setHeaderContent((prev) => ({ ...prev, fullname: value }));
@@ -111,12 +127,13 @@ const DocHeader: FC<DocHeaderProps> = ({ document, refetch }) => {
         </div>
         <div>
           <span className="font-semibold">Subject </span>
-          <span>{document.subjectId.title}</span>
+          <span>{doc.subjectId.title}</span>
         </div>
 
         <div>
           <span className="font-semibold">Class: </span>
           <EditableText
+            readOnly={readOnly}
             value={headerContent.class}
             onContentChange={(value) => {
               setHeaderContent((prev) => ({ ...prev, class: value }));
@@ -126,6 +143,7 @@ const DocHeader: FC<DocHeaderProps> = ({ document, refetch }) => {
         <div>
           <span className="font-semibold">Session N° </span>
           <EditableText
+            readOnly={readOnly}
             value={headerContent.sessionNumber}
             onContentChange={(value) => {
               setHeaderContent((prev) => ({
@@ -140,49 +158,55 @@ const DocHeader: FC<DocHeaderProps> = ({ document, refetch }) => {
       <div>
         <div className="flex items-center gap-2">
           <div className="font-semibold">Objectives: </div>
-          <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
-            <DialogTrigger asChild>
-              <Button variant="notion" className="p-0 w-6 h-6">
-                <Plus size={14} />
-              </Button>
-            </DialogTrigger>
-            <DialogContent>
-              <DialogHeader>
-                <DialogTitle>Add New Objective</DialogTitle>
-              </DialogHeader>
-              <div className="flex flex-col gap-4">
-                <Input
-                  value={newObjective}
-                  onChange={(e) => setNewObjective(e.target.value)}
-                  placeholder="Enter new objective"
-                  onKeyDown={(e) => {
-                    if (e.key === "Enter") {
-                      handleAddObjective();
-                    }
-                  }}
-                />
-                <Button onClick={handleAddObjective}>Add Objective</Button>
-              </div>
-            </DialogContent>
-          </Dialog>
+          {!readOnly && (
+            <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
+              <DialogTrigger asChild>
+                <Button variant="notion" className="p-0 w-6 h-6">
+                  <Plus size={14} />
+                </Button>
+              </DialogTrigger>
+              <DialogContent>
+                <DialogHeader>
+                  <DialogTitle>Add New Objective</DialogTitle>
+                </DialogHeader>
+                <div className="flex flex-col gap-4">
+                  <Input
+                    value={newObjective}
+                    onChange={(e) => setNewObjective(e.target.value)}
+                    placeholder="Enter new objective"
+                    onKeyDown={(e) => {
+                      if (e.key === "Enter") {
+                        handleAddObjective();
+                      }
+                    }}
+                  />
+                  <Button onClick={handleAddObjective}>Add Objective</Button>
+                </div>
+              </DialogContent>
+            </Dialog>
+          )}
         </div>
-        {headerContent.objectives.map((objective, index) => (
+        {headerContent.objectives.map((objective: string, index: number) => (
           <div key={index}>
             <div>
               <Dot className="inline" />
               {objective}
-              <Button
-                variant="notion"
-                className="p-0 ml-2 w-6 h-6"
-                onClick={() => {
-                  setHeaderContent((prev) => ({
-                    ...prev,
-                    objectives: prev.objectives.filter((_, i) => i !== index),
-                  }));
-                }}
-              >
-                <Trash2 size={14} />
-              </Button>
+              {!readOnly && (
+                <Button
+                  variant="notion"
+                  className="p-0 ml-2 w-6 h-6"
+                  onClick={() => {
+                    setHeaderContent((prev) => ({
+                      ...prev,
+                      objectives: prev.objectives.filter(
+                        (_: string, i: number) => i !== index
+                      ),
+                    }));
+                  }}
+                >
+                  <Trash2 size={14} />
+                </Button>
+              )}
             </div>
           </div>
         ))}

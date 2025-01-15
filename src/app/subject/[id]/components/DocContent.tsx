@@ -2,11 +2,11 @@
 import { useDocumentStore } from "@/stores/document.store";
 import { useQuery } from "@tanstack/react-query";
 import { FC } from "react";
-import DocHeader from "./document-content/DocHeader";
+import DocHeader from "../../../../components/document-content/DocHeader";
 import { Noto_Serif } from "next/font/google";
 // import { Loader2, Save } from "lucide-react";
 import { cn } from "@/lib/utils";
-import DocNav from "./document-content/DocNav";
+import DocNav from "../../../../components/document-content/DocNav";
 import dynamic from "next/dynamic";
 
 const notoSerif = Noto_Serif({
@@ -30,6 +30,8 @@ const DocContent: FC<DocContentProps> = ({}) => {
       const data = await response.json();
       if (response.ok) {
         return data.document;
+      } else {
+        console.log(data);
       }
     } catch (error) {
       throw new Error("Failed to fetch document");
@@ -42,9 +44,12 @@ const DocContent: FC<DocContentProps> = ({}) => {
     enabled: !!documentId,
   });
 
-  const DocEditor = dynamic(() => import("./document-content/DocEditor"), {
-    ssr: false,
-  });
+  const DocEditor = dynamic(
+    () => import("../../../../components/document-content/DocEditor"),
+    {
+      ssr: false,
+    }
+  );
 
   return (
     <div className={cn(notoSerif.className, "relative h-screen")}>
