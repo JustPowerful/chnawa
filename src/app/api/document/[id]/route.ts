@@ -5,7 +5,7 @@ import connectDB from "@/lib/connectDB";
 
 export async function GET(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   console.log(await params);
   try {
