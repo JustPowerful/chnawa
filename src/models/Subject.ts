@@ -1,4 +1,5 @@
 import mongoose, { Model, Schema } from "mongoose";
+import { getModel } from "./registry";
 
 export interface ISubject extends Document {
   title: string;
@@ -8,7 +9,7 @@ export interface ISubject extends Document {
   teacherEmail?: string;
 }
 
-const SubjectSchema = new Schema(
+const subjectSchema = new Schema(
   {
     title: { type: String, required: true },
     userId: { type: Schema.Types.ObjectId, ref: "User", required: true },
@@ -21,12 +22,5 @@ const SubjectSchema = new Schema(
   }
 );
 
-let Subject: Model<ISubject>;
-
-try {
-  Subject = mongoose.model<ISubject>("Subject");
-} catch (error) {
-  Subject = mongoose.model<ISubject>("Subject", SubjectSchema);
-}
-
+const Subject = getModel("Subject", subjectSchema);
 export default Subject;

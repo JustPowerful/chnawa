@@ -4,6 +4,7 @@ import mongoose, {
   Document as DocumentInterface,
   model,
 } from "mongoose";
+import { getModel } from "./registry";
 
 interface IDocument extends DocumentInterface {
   title: string;
@@ -16,7 +17,7 @@ interface IDocument extends DocumentInterface {
   content: Schema.Types.Mixed; // Mixed type to store any type of data
 }
 
-const DocumentSchema = new Schema<IDocument>({
+const documentSchema = new Schema<IDocument>({
   title: {
     type: String,
     required: true,
@@ -56,11 +57,5 @@ const DocumentSchema = new Schema<IDocument>({
 // // sync indexes content
 // await mongoose.syncIndexes();
 
-let Document: Model<IDocument>;
-try {
-  Document = model<IDocument>("Document");
-} catch (error) {
-  Document = model<IDocument>("Document", DocumentSchema);
-}
-
+const Document = getModel("Document", documentSchema);
 export default Document;

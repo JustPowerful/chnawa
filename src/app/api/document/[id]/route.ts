@@ -8,8 +8,8 @@ export async function GET(
   request: NextRequest,
   { params }: { params: Promise<{ id: string }> }
 ) {
-  console.log(await params);
   try {
+    await connectDB();
     const { id } = await params;
     const session = await auth();
     if (!session) {
@@ -23,7 +23,6 @@ export async function GET(
         }
       );
     }
-    await connectDB();
 
     const document = await Document.findById(id)
       .populate("subjectId")
@@ -41,7 +40,7 @@ export async function GET(
       );
     }
 
-    if ((document.userId as any)._id.toString() !== session.user.id) {
+    if ((document as any).userId._id.toString() !== session.user.id) {
       return NextResponse.json(
         {
           success: false,
@@ -59,7 +58,7 @@ export async function GET(
       message: "Document fetched successfully",
     });
   } catch (error) {
-    throw error;
+    console.error(error);
     return NextResponse.json(
       {
         success: false,
