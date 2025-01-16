@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { auth } from "@/lib/auth";
 import Document from "@/models/Document";
+import Subject from "@/models/Subject"; // to initialize the model
 import connectDB from "@/lib/connectDB";
 
 export async function GET(
