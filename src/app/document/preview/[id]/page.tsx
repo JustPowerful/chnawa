@@ -5,6 +5,7 @@ import Document from "@/models/Document";
 import { Save } from "lucide-react";
 import React from "react";
 import DownloadButton from "./components/DownloadButton";
+import "@/models/Subject";
 
 const page = async ({ params }: { params: Promise<{ id: string }> }) => {
   const { id } = await params;
