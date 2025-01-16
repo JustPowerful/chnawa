@@ -58,6 +58,7 @@ export async function GET(
       message: "Document fetched successfully",
     });
   } catch (error) {
+    throw error;
     return NextResponse.json(
       {
         success: false,
