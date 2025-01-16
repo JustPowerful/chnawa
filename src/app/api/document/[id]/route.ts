@@ -1,7 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { auth } from "@/lib/auth";
 import Document from "@/models/Document";
-import Subject from "@/models/Subject"; // to initialize the model
 import connectDB from "@/lib/connectDB";
 
 export async function GET(
@@ -40,7 +39,7 @@ export async function GET(
       );
     }
 
-    if ((document as any).userId._id.toString() !== session.user.id) {
+    if (document.userId.id.toString() !== session.user.id) {
       return NextResponse.json(
         {
           success: false,

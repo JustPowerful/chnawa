@@ -31,7 +31,8 @@ const DocContent: FC<DocContentProps> = ({}) => {
       if (response.ok) {
         return data.document;
       } else {
-        console.log(data);
+        console.log("Failed to fetch document", data);
+        return data;
       }
     } catch (error) {
       throw new Error("Failed to fetch document");

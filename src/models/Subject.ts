@@ -1,12 +1,14 @@
-import mongoose, { Model, Schema } from "mongoose";
+import mongoose, { Document, Schema } from "mongoose";
 import { getModel } from "./registry";
 
 export interface ISubject extends Document {
   title: string;
-  userId: Schema.Types.ObjectId;
+  userId: mongoose.Types.ObjectId;
   description?: string;
   teacherName?: string;
   teacherEmail?: string;
+  createdAt: Date;
+  updatedAt: Date;
 }
 
 const subjectSchema = new Schema(
@@ -22,5 +24,5 @@ const subjectSchema = new Schema(
   }
 );
 
-const Subject = getModel("Subject", subjectSchema);
+const Subject = getModel<ISubject>("Subject", subjectSchema);
 export default Subject;
