@@ -7,6 +7,7 @@ import ColorPicker from "editorjs-color-picker";
 import { useDebouncedUpdate } from "@/hooks/use-debounced-update";
 import { updateDocumentContentAction } from "@/app/actions/document/update-document-content";
 import toast from "react-hot-toast";
+import ImageTool from "@editorjs/image";
 
 const DEFAULT_INITIAL_DATA: OutputData = {
   time: 0,
@@ -77,6 +78,18 @@ function Editor({
         readOnly,
         placeholder: "Write something, or press / to use commands",
         tools: {
+          image: {
+            class: ImageTool,
+            config: {
+              features: {
+                caption: "optional",
+                risize: true,
+              },
+              endpoints: {
+                byFile: "/api/upload",
+              },
+            },
+          },
           list: List,
           header: Header,
           ColorPicker: {
