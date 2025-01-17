@@ -2,6 +2,7 @@
 import { buttonVariants } from "@/components/ui/button";
 import { Plus } from "lucide-react";
 import { FC, useState } from "react";
+import logo from "@/assets/logo.png";
 
 import {
   DropdownMenu,
@@ -11,6 +12,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { cn } from "@/lib/utils";
 import SubjectForm from "./SubjectForm";
+import Image from "next/image";
 
 interface DashboardNavProps {}
 
@@ -27,7 +29,9 @@ const DashboardNav: FC<DashboardNavProps> = ({}) => {
 
       <div className="w-full p-4 sticky top-0 left-0">
         <div className="bg-white bg-opacity-50 backdrop-blur-md border p-4 rounded-full flex items-center justify-between">
-          <div className="text-xl font-semibold opacity-80">😯 Chnawa!</div>
+          <div className="text-xl font-semibold opacity-80">
+            <Image src={logo} width={50} height={50} alt="chnawa logo" />
+          </div>
           <div>
             <DropdownMenu>
               <DropdownMenuTrigger
