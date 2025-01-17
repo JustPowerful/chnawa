@@ -17,7 +17,7 @@ async function Navbar() {
           <Image src={logo} width={50} height={50} alt="chnawa logo" />
           Chnawa!
         </div>
-        {session!.user ? (
+        {session ? (
           <div>
             <Link
               href="/dashboard"
