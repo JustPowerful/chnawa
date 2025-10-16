@@ -17,9 +17,7 @@ interface FieldErrors {
   classref?: ZodError;
 }
 
-interface signupformProps {}
-
-const SignupForm: FC<signupformProps> = ({}) => {
+const SignupForm: FC = () => {
   const [fieldErrors, setFieldErrors] = useState<FieldErrors>({
     firstname: undefined,
     lastname: undefined,
@@ -45,7 +43,7 @@ const SignupForm: FC<signupformProps> = ({}) => {
         classref: formData.get("classref") as string,
       });
 
-      if (result.success) {
+      if (result!.success) {
         toast.success(result.message);
       } else {
         if (result.validationErrors) {

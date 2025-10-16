@@ -25,7 +25,9 @@ const EditableText: FC<EditableTextProps> = ({
       contentEditable={!readOnly}
       suppressContentEditableWarning
       onInput={(e) => {
-        onContentChange && onContentChange(e.currentTarget.textContent || "");
+        if (onContentChange) {
+          onContentChange((e.target as HTMLSpanElement).textContent || "");
+        }
       }}
       className="outline-none custom-input editor caret-effect inline-block whitespace-pre-wrap"
     />

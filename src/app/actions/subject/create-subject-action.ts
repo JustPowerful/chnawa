@@ -44,7 +44,7 @@ export const createSubjectAction = actionClient
           success: true,
           message: "Subject created successfully!",
         };
-      } catch (error) {
+      } catch {
         return {
           success: false,
           message: "Error creating subject!",

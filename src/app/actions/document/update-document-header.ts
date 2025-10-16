@@ -23,10 +23,7 @@ export const updateDocumentHeaderAction = actionClient
       const session = await auth();
 
       const document = await Document.findById(parsedInput.id);
-      if (
-        !document ||
-        (document as any).userId?.toString() !== session?.user.id
-      ) {
+      if (!document || document.userId?.toString() !== session?.user.id) {
         throw new Error("Not authorized");
       }
 
@@ -38,7 +35,7 @@ export const updateDocumentHeaderAction = actionClient
         objectives: parsedInput.objectives,
       });
       // check if title is changed
-      if ((document as any).title !== parsedInput.title) {
+      if (document.title !== parsedInput.title) {
         // revalidate the document page
         revalidatePath(`/document/${parsedInput.id}`);
       }
@@ -47,7 +44,7 @@ export const updateDocumentHeaderAction = actionClient
         success: true,
         message: "Document updated successfully",
       };
-    } catch (error) {
+    } catch {
       return {
         success: false,
         message: "Failed to update document",

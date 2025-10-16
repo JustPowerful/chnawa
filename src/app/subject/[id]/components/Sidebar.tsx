@@ -1,6 +1,7 @@
 "use client";
+
 import { Button, buttonVariants } from "@/components/ui/button";
-import { File, Files, Plus } from "lucide-react";
+import { File, Files, Loader2, Plus } from "lucide-react";
 import { FC, useEffect, useRef, useState } from "react";
 
 import {
@@ -15,10 +16,12 @@ import { cn } from "@/lib/utils";
 import { InputWithLabel } from "@/components/ui/input-with-label";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { createDocumentAction } from "@/app/actions/document/create-document-actions";
 import toast from "react-hot-toast";
 import { useDocumentStore } from "@/stores/document.store";
 
+import { useAction } from "next-safe-action/hooks";
+import { createDocumentAction } from "@/app/actions/document/create-document-actions";
+import DeleteModal from "./DeleteModal";
 interface SidebarProps {
   id: string;
   title: string;
@@ -43,16 +46,23 @@ const Sidebar: FC<SidebarProps> = ({
     title: string;
   }[] = JSON.parse(documents);
 
+  // Applying useAction here to get the loading state
+  const {
+    execute: createDocumentExec,
+    isPending: createDocumentLoading,
+    result: response,
+  } = useAction(createDocumentAction);
+
   const updateDocumentId = useDocumentStore((state) => state.updateDocumentId);
   const resetDocumentId = useDocumentStore((state) => state.resetDocumetId);
 
   useEffect(() => {
     resetDocumentId();
-  }, []);
+  }, [resetDocumentId]);
 
   async function createDocument(formData: FormData) {
     try {
-      const response = await createDocumentAction({
+      createDocumentExec({
         subjectId: id,
         title: formData.get("title") as string,
         sessionNumber: Number(formData.get("sessionNumber")),
@@ -63,7 +73,7 @@ const Sidebar: FC<SidebarProps> = ({
       } else {
         toast.error(response?.data?.message);
       }
-    } catch (error) {
+    } catch {
       toast.error("Failed to create document");
     } finally {
       setObjectives([]);
@@ -133,11 +143,12 @@ const Sidebar: FC<SidebarProps> = ({
                     variant="notion"
                     onClick={(event) => {
                       event.preventDefault();
-                      setObjectives((prev) => [
-                        ...prev,
-                        ObjectInputRef.current?.value!,
-                      ]);
-                      ObjectInputRef.current!.value = "";
+                      const value = ObjectInputRef.current?.value?.trim();
+                      if (!value) return;
+                      setObjectives((prev) => [...prev, value]);
+                      if (ObjectInputRef.current) {
+                        ObjectInputRef.current.value = "";
+                      }
                     }}
                   >
                     Add Objective
@@ -163,7 +174,13 @@ const Sidebar: FC<SidebarProps> = ({
                 </div>
 
                 <div className="flex justify-end space-x-2">
-                  <Button type="submit">Create</Button>
+                  <Button type="submit">
+                    {createDocumentLoading ? (
+                      <Loader2 className="w-4 h-4 animate-spin text-white" />
+                    ) : (
+                      "Create"
+                    )}
+                  </Button>
                   <Button
                     variant="secondary"
                     onClick={(event) => {
@@ -184,16 +201,20 @@ const Sidebar: FC<SidebarProps> = ({
         </div>
         <div className="flex flex-col gap-2">
           {parsedDocs.map((doc) => (
-            <button
-              onClick={() => {
-                updateDocumentId(doc._id);
-              }}
-              key={doc._id}
-              className=" bg-slate-100 p-1.5 rounded-md w-full flex gap-1 items-center text-xs hover:bg-slate-300"
-            >
-              <File className="w-3 h-3" />
-              <p>{doc.title}</p>
-            </button>
+            <div key={doc._id} className="grid grid-cols-[9fr_2fr]">
+              <div
+                onClick={() => {
+                  updateDocumentId(doc._id);
+                }}
+                className="cursor-pointer bg-slate-100 p-2 w-full flex gap-1 items-center justify-between text-xs hover:bg-slate-300"
+              >
+                <div className="flex items-center gap-1">
+                  <File className="w-3 h-3" />
+                  <p>{doc.title}</p>
+                </div>
+              </div>
+              <DeleteModal documentId={doc._id} title={doc.title} />
+            </div>
           ))}
         </div>
       </div>

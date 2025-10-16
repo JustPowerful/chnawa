@@ -27,7 +27,7 @@ const page: FC<pageProps> = async ({ params }) => {
         <ResizablePanel defaultSize={25} maxSize={30} minSize={15}>
           <Sidebar
             id={id}
-            title={subject?.title!}
+            title={subject!.title}
             description={subject?.description}
             teacherEmail={subject?.teacherEmail}
             teacherName={subject?.teacherName}

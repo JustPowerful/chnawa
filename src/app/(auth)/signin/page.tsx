@@ -1,9 +1,7 @@
 import { FC } from "react";
 import SignInForm from "./components/signinform";
 
-interface pageProps {}
-
-const page: FC<pageProps> = ({}) => {
+const page: FC = () => {
   return (
     <div className="w-full h-screen flex items-center justify-center">
       <SignInForm />

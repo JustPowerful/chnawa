@@ -2,7 +2,6 @@ import Editor from "@/components/document-content/DocEditor";
 import DocHeader from "@/components/document-content/DocHeader";
 import connectDB from "@/lib/connectDB";
 import Document from "@/models/Document";
-import { Save } from "lucide-react";
 import React from "react";
 import DownloadButton from "./components/DownloadButton";
 import "@/models/Subject";

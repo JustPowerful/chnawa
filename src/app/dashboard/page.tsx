@@ -6,9 +6,7 @@ import Subject from "@/models/Subject";
 import SubjectPreview from "./components/SubjectPreview";
 import connectDB from "@/lib/connectDB";
 
-interface pageProps {}
-
-const page: FC<pageProps> = async ({}) => {
+const page: FC = async () => {
   const session = await auth();
   await connectDB(); // connect to the database before fetching data
   const subjects = await Subject.find({
@@ -20,7 +18,9 @@ const page: FC<pageProps> = async ({}) => {
 
       <div className="p-6 flex flex-col">
         <WelcomeMsg />
-        <div className="text-zinc-700 text-xl">Here's your subjects 📚</div>
+        <div className="text-zinc-700 text-xl">
+          Here&apos;s your subjects 📚
+        </div>
         <div id="container" className="mt-6 ">
           <div className="grid grid-cols-4 gap-6">
             {subjects.map((subject) => (

@@ -32,11 +32,7 @@ interface DocHeaderProps {
   readOnly?: boolean;
 }
 
-const DocHeader: FC<DocHeaderProps> = ({
-  document,
-  refetch,
-  readOnly = false,
-}) => {
+const DocHeader: FC<DocHeaderProps> = ({ document, readOnly = false }) => {
   let doc = typeof document === "object" ? document : JSON.parse(document);
   if (typeof document === "string") {
     doc = JSON.parse(document);
@@ -52,7 +48,7 @@ const DocHeader: FC<DocHeaderProps> = ({
   const [newObjective, setNewObjective] = useState("");
   const [isDialogOpen, setIsDialogOpen] = useState(false);
 
-  const { isPending, debouncedUpdate } = useDebouncedUpdate(
+  const { debouncedUpdate } = useDebouncedUpdate(
     (data: typeof headerContent) => {
       const d = updateDocumentHeaderAction({
         id: doc._id,
@@ -78,7 +74,7 @@ const DocHeader: FC<DocHeaderProps> = ({
       return;
     }
     debouncedUpdate(headerContent);
-  }, [headerContent, debouncedUpdate]);
+  }, [headerContent, debouncedUpdate, readOnly]);
 
   useEffect(() => {
     setHeaderContent({
@@ -89,7 +85,7 @@ const DocHeader: FC<DocHeaderProps> = ({
       sessionNumber: doc.sessionNumber,
       objectives: doc.objectives,
     });
-  }, [document]);
+  }, [document, doc]);
 
   const handleAddObjective = () => {
     if (newObjective.trim()) {

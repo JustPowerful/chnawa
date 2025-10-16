@@ -18,10 +18,7 @@ export const updateDocumentContentAction = actionClient
       const session = await auth();
 
       const document = await Document.findById(parsedInput.id);
-      if (
-        !document ||
-        (document as any).userId?.toString() !== session?.user.id
-      ) {
+      if (!document || document.userId?.toString() !== session?.user.id) {
         throw new Error("Not authorized");
       }
 
@@ -33,7 +30,7 @@ export const updateDocumentContentAction = actionClient
         success: true,
         message: "Document content updated successfully",
       };
-    } catch (error) {
+    } catch {
       return {
         success: false,
         message: "Failed to update document content",

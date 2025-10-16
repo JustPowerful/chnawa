@@ -48,7 +48,7 @@ export const createDocumentAction = actionClient
           success: true,
           message: "Document created successfully",
         };
-      } catch (error) {
+      } catch {
         return {
           success: false,
           message: "Error creating document",

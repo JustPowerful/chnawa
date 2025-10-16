@@ -19,9 +19,7 @@ const notoSerif = Noto_Serif({
 //   weight: ["100", "200", "300", "400", "500", "600", "700", "800", "900"],
 // });
 
-interface DocContentProps {}
-
-const DocContent: FC<DocContentProps> = ({}) => {
+const DocContent: FC = () => {
   const documentId = useDocumentStore((state) => state.documentId);
   // const isSaving = useDocumentStore((state) => state.saving);
   async function fetchDocumentHeader() {
@@ -34,12 +32,12 @@ const DocContent: FC<DocContentProps> = ({}) => {
         console.log("Failed to fetch document", data);
         return data;
       }
-    } catch (error) {
+    } catch {
       throw new Error("Failed to fetch document");
     }
   }
 
-  const { refetch, data, error, isFetched } = useQuery({
+  const { refetch, data } = useQuery({
     queryKey: ["document", documentId],
     queryFn: fetchDocumentHeader,
     enabled: !!documentId,

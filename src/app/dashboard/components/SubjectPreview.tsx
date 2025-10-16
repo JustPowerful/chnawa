@@ -54,7 +54,7 @@ const SubjectPreview: FC<SubjectPreviewProps> = ({
       } else {
         toast.error("Failed to delete subject, please try again later.");
       }
-    } catch (error) {
+    } catch {
       toast.error("Failed to delete subject, please try again later.");
     }
   }
@@ -73,7 +73,7 @@ const SubjectPreview: FC<SubjectPreviewProps> = ({
       } else {
         toast.error("Failed to update subject, please try again later.");
       }
-    } catch (error) {
+    } catch {
       toast.error("Failed to update subject, please try again later.");
     } finally {
       setToggleEdit(false);
@@ -118,8 +118,8 @@ const SubjectPreview: FC<SubjectPreviewProps> = ({
           <DialogHeader>
             <DialogTitle>Editing {title}</DialogTitle>
             <DialogDescription>
-              You are currently editing the subject details. Make sure you don't
-              add wrong information.
+              You are currently editing the subject details. Make sure you
+              don&apos;t add wrong information.
             </DialogDescription>
           </DialogHeader>
           <form action={editSubject} className="flex flex-col gap-2">

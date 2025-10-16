@@ -39,7 +39,7 @@ export const editSubjectAction = actionClient
           success: true,
           message: "Subject updated successfully",
         };
-      } catch (error) {
+      } catch {
         return {
           success: false,
           message: "Failed to update subject",

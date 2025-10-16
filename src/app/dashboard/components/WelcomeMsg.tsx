@@ -3,9 +3,7 @@
 import { FC } from "react";
 import { useSession } from "next-auth/react";
 
-interface WelcomeMsgProps {}
-
-const WelcomeMsg: FC<WelcomeMsgProps> = ({}) => {
+const WelcomeMsg: FC = () => {
   const { data: session } = useSession();
   return (
     <div>

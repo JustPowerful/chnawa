@@ -42,7 +42,7 @@ function MenuBar({
     try {
       setIsExporting(true);
       router.push(`/document/preview/${docum._id}`);
-    } catch (error) {
+    } catch {
       toast.error("Failed to export PDF");
     } finally {
       setIsExporting(false);
@@ -153,7 +153,7 @@ interface DocNavProps {
   };
   refetch: () => void;
 }
-const DocNav: FC<DocNavProps> = ({ document: docum, refetch }) => {
+const DocNav: FC<DocNavProps> = ({ document: docum }) => {
   const isSaving = useDocumentStore((state) => state.saving);
 
   // useEffect(() => {

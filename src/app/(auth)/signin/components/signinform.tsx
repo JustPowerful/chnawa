@@ -7,9 +7,7 @@ import { Button } from "@/components/ui/button";
 import { InputWithLabel } from "@/components/ui/input-with-label";
 import { Loader2 } from "lucide-react";
 
-interface SignInFormProps {}
-
-const SignInForm: FC<SignInFormProps> = () => {
+const SignInForm: FC = () => {
   const router = useRouter();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -32,7 +30,7 @@ const SignInForm: FC<SignInFormProps> = () => {
       }
 
       router.push("/dashboard"); // Redirect to dashboard after successful sign in
-    } catch (error) {
+    } catch {
       setError("Something went wrong");
     } finally {
       setIsLoading(false);

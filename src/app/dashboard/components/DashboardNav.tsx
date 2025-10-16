@@ -14,9 +14,7 @@ import { cn } from "@/lib/utils";
 import SubjectForm from "./SubjectForm";
 import Image from "next/image";
 
-interface DashboardNavProps {}
-
-const DashboardNav: FC<DashboardNavProps> = ({}) => {
+const DashboardNav: FC = () => {
   const [toggleSubjectDialog, setToggleSubjectDialog] = useState(false);
 
   return (

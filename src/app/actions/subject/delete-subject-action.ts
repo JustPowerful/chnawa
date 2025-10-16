@@ -26,7 +26,7 @@ export const deleteSubjectAction = actionClient
         success: true,
         message: "Subject deleted successfully",
       };
-    } catch (error) {
+    } catch {
       return {
         success: false,
         message: "Failed to delete subject, please try again later",
